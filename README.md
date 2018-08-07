@@ -1,14 +1,79 @@
-﻿# Part 2
+# COMP 271 002 SU18 Lab 10 
 
-##### _Discussion: What would be a really simple solution if n were not an argument, i.e., if it were always 17?_
-If the fizzBuzz method was called with an integer as a parameter, the logic embedded in the fizzBuzz method to convert the command line String to an integer and the input validation would no longer be needed as the method would only accept an integer. That integer could be directly used to construct and print the fizz buzz sequence. 
-# Part 3
+# Team project
 
-##### _Discussion: How could you have automatically tested your initial solution from part 2?_
-Without changing my code from part 2 at all, I would have to intercept the output stream to test it automatically. From what I understand, I'd have to declare a ByteArrayOutputStream and then reassign the standard output stream using System.setOut() to the print stream. Then I think I would be able to use assertEquals() on the output stream. This is quite cumbersome so it's much easier to write the method so that it returns something easily testable in JUnit.
-# Part 4
-##### _Discussion: What changes between parts 2, 3, and 4, and what stays the same? Does it matter what list implementation you choose? If so, in what way(s)?_
+Work in teams of two.
 
-The core fizz buzz logic (i.e. the logic that determines which numbers are fizzed, buzzed, or simply printed) remains the same across all parts of the lab. Part two differs quite a bit from parts 3 and 4 as fizzBuzz is a void method that prints the results to the terminal whereas both parts 3 and 4 return something (an array or an ArrayList) back to Main for processing. Input validation changed across each part of this project as well. Each version implemented the same number format validation but each differed in how negative numbers were controlled for. In part 2, I simply threw an Exception if max > 0. In part  3, I instantiated an array of size max in a try catch block and was able to catch any NegativeArraySizeExceptions thrown. As the negative array size exception no longer would be a valid option in part 4, I simply made the method return null if max was less than 0 and created a try-catch block in main to control for a null pointer exception. I did this so the tests for negative arguments would still pass in the test suite. 
+# Objectives
 
-As far as list implementations go, we've only learned about ArrayList so far, so I decided to use that one. However, I do know that the Vector exists but is deprecated so it should not be used. A Linked List would be more applicable if this program carried out a lot of additions, subtractions, and substitutions as a Linked List has a smaller growth rate than an ArrayList. However, this program was only adding items to the List, so in that regard there's not many differences between the two.
+An understanding of the following concepts and techniques:
+
+- Graph ADT
+- Graph algorithms
+- Libraries for working with graphs
+
+# Instructions
+
+In this lab, you will have the opportunity to represent a geographical map as a graph and manipulate this graph in various useful ways.
+
+Specifically:
+
+1. Create a new Gradle-based project based on one of your earlier projects:
+    - define a main class
+    - define a separate class for the country codes (see below)
+    - [JGraphT](http://jgrapht.org/) library dependency - visit [this page](http://search.maven.org/#artifactdetails%7Corg.jgrapht%7Cjgrapht-core%7C1.1.0%7Cjar) and put the dependency information for Gradle in the `dependencies` section of your `build.gradle`
+    - don't forget to include a `.gitignore`
+    - remove everything you don't need
+1. Pick any country in the world (or state/province/territory/department within a single country) that has at least five neighbors with which it shares a border of length > 0 (a corner doesn't count).
+1. Define string constants for the country and its immediate neighbors, preferably using the corresponding [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) codes.
+
+        final static String AT = "Austria";
+        final static String DE = "Germany";
+        ...
+1. Using the [JGraphT](http://jgrapht.org/) library, define a graph representing the map limited to the country you picked and its immediate neighbors.
+Concretely, define a graph instance, add a vertex for each country, then add an edge for each pair of neighboring countries.
+(Because this is an undirected graph, you need to add only *one* edge for each pair of neighboring countries.)
+
+        final Graph<String, DefaultEdge> myMap = new SimpleGraph<>(DefaultEdge.class);
+        myMap.addVertex(AT);
+        myMap.addVertex(DE);
+        ...
+        myMap.addEdge(AT, DE);
+        ...
+    Then print the resulting graph.
+1. Traverse the graph using the following different traversal algorithms (in `org.grapht.traverse`):
+    - `BreadthFirstIterator`
+    - `ClosestFirstIterator`
+    - `DepthFirstIterator`
+    - `RandomWalkIterator`
+
+    For each of these algorithms, use both your central country and a country on the edge of your map as starting points.
+    For each combination of country and traversal algorithm, print the resulting iteration sequence.
+    
+    Example:    
+    
+        final Iterator<String> bf = new BreadthFirstIterator<>(myMap, DE);
+        while (bf.hasNext()) {
+          final String country = bf.next();
+          ...
+        }
+
+    *Written part:* Discuss the differences among the results.
+    Does the starting point make a difference?
+1. Using JGraphT's `GreedyColoring` or other coloring algorithm, find out how many colors are required to color your map in such a way that no two adjacent countries have the same color.
+Concretely, create an instance of `GreedyColoring` for your map, then generate and print the coloring.
+
+    *Fun fact:* For any idealized map (planar graph), this requires [at most four colors](https://en.wikipedia.org/wiki/Four_color_theorem).
+
+    *Written part:* Give two or three examples of how/why a real-world map might require more than four colors.
+
+# Grading
+
+- 0.5 correct project structure (based on Gradle)
+- 0.5 submission via GitHub (including multiple commits over time)
+- 3 completion of items listed above and correct behavior
+- 1 written part (in `Answers.md`)
+    - 0.8 responses to the questions embedded above
+    - 0.2 grammar, style, formatting
+
+*5 points TOTAL*
