@@ -102,23 +102,26 @@ public class Main {
             System.out.println(country);
         }
         System.out.println("--------------------");
-        /*
+
         //Random Walk Search
         final Iterator<String> rw = new RandomWalkIterator<>(myMap, PL);
-        while (rw.hasNext()){
+        Set<String> countrySet = new HashSet<>();
+        while (rw.hasNext() && !countrySet.contains(rw.next())){
             final String country = rw.next();
             System.out.println(country);
+            countrySet.add(country);
         }
         System.out.println("--------------------");
-        */
-        /*
+
         final Iterator<String> rw1 = new RandomWalkIterator<>(myMap, DE);
-        while (rw1.hasNext()){
+        countrySet.clear();
+        while (rw1.hasNext() && ! countrySet.contains(rw1.next())){
             final String country = rw1.next();
             System.out.println(country);
+            countrySet.add(country);
         }
         System.out.println("--------------------");
-        */
+
         //map coloring
         GreedyColoring testMap = new GreedyColoring(myMap);
         System.out.println(testMap.getColoring());
